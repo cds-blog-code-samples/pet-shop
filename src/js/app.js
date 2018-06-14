@@ -1,6 +1,8 @@
 // credit to xavier lepretre
 // @ https://gist.github.com/xavierlepretre/88682e871f4ad07be4534ae560692ee6
 //
+// Todo: getTransactionReceipt may be awaitable now.
+//
 function getTransactionReceiptMined(txHash, interval) {
   const self = this
   const transactionReceiptAsync = function(resolve, reject) {
@@ -100,9 +102,6 @@ App = {
 
         return adoptionInstance.getAdopters.call()
       })
-      /* .then(function(txHash) {
-       *   return web3.eth.getTransactionReceiptMined(txHash.tx)
-       * }) */
       .then(function(adopters) {
         for (i = 0; i < adopters.length; i++) {
           console.log(`Pet[${i}] owner is (${adopters[i]})`)
@@ -137,9 +136,13 @@ App = {
         .then(function(instance) {
           adoptionInstance = instance
 
+          console.log('how nice, adopt a puppy!')
           // Execute adopt as a transaction by sending account
           return adoptionInstance.adopt(petId, { from: account })
         })
+        // todo:
+        // is this necessary if timeout on 3 secs
+        //
         .then(function(txHash) {
           console.log('txHash', txHash.tx)
           console.log('waiting for it to be mined..')
